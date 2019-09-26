@@ -7,7 +7,7 @@ import graph
 
 re_cmd = r'^[acr][\ ]+'
 re_street_name = r'"[a-zA-Z\ ]+"'
-re_graph = r'^\ *g\ *'
+re_graph = r'^\ *g\ *$'
 re_remove = r'^\ *r\ +"[a-zA-Z\ ]+"\ *$'
 re_add_change = r'^\ *[ac]\ +"[a-zA-Z\ ]+"\ +(\(\ *\-?[0-9]+\ *,\ *\-?[0-9]+\ *\)\ *)+$'
 re_point = r'\(\ *\-?[0-9]+\ *,\ *\-?[0-9]+\ *\)'
