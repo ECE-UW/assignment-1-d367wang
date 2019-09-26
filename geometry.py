@@ -105,21 +105,22 @@ def intersect(l1, l2):
 def isOnLine(pt, l):
     if pt == l.src or pt == l.dst:
         return True
+    x1, y1 = l.src.x, l.src.y
+    x2, y2 = l.dst.x, l.dst.y
+    x, y = pt.x, pt.y
+
     # vertical line
     if isVertical(l):
-        if pt.x == l.src.x and pt.y < max(l.src.y, l.dst.y) and pt.y > min(l.src.y, l.dst.y):
+        if x == x1 and y < max(y1, y2) and pt.y > min(y1, y2):
             return True
         else:
             return False
 
     # gradient of line
-    k = (l.dst.y - l.src.y) / (l.dst.x - l.src.x)
-    if k == (pt.y - l.src.y) / (pt.x - l.src.x) and \
-            pt.x < max(l.src.x, l.dst.x) and \
-            pt.x > min(l.src.x, l.dst.x):
-        return True
-    else:
-        return False
+    k = (y2 - y1) / (x2 - x1)
+    b = y1 - k*x1
+    # line y = kx + b
+    return (k*x + b == y)
 
 # l1 new line, l2 already exist
 # if overlap,
