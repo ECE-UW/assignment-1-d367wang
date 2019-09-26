@@ -22,9 +22,7 @@ def main():
         try:
             cmdParser.operation_parse(input)
         except Exception as e:
-            print e.message
-
-        # cmdParser.operation_parse(input)
+            sys.stderr.write('Error: '+ e.message)
 
     print 'Finished reading input'
     # return exit code 0 on successful termination
