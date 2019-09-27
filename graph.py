@@ -235,4 +235,6 @@ class Graph(object):
 
     def add_street_edge_to_graph(self, street_edge):
         for e in street_edge:
+            if (e[0],e[1]) in self.edge or (e[1],e[0]) in self.edge:
+                return
             self.edge.add(e)
