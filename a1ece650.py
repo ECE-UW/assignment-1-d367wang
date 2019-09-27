@@ -16,13 +16,14 @@ def main():
         # if line == '':
         #     break
         # print 'read a line:', line
-        input = raw_input("your command: ")
+        input = raw_input("\nyour command: ")
         if input == '':
             break
         try:
             cmdParser.operation_parse(input)
         except Exception as e:
-            sys.stderr.write('Error: '+ e.message)
+            sys.stderr.write('Error: '+ e.message + '\n')
+        # cmdParser.operation_parse(input)
 
     print 'Finished reading input'
     # return exit code 0 on successful termination
