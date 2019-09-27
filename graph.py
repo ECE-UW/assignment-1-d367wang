@@ -99,18 +99,18 @@ class Graph(object):
             for key in self.graph_streets:
                 for seg_old in self.graph_streets[key].segments:
                     # do not consider times when segments are overlapped
-                    if not geometry.isOverlap(seg_old, seg_new):
+                    # if not geometry.isOverlap(seg_old, seg_new):
                         # zero or one intersect, if zero intersect, return none
                         # new_graph_street.intersects.append(intersect)
-                        pt = geometry.intersect(seg_new, seg_old)
-                        if pt:
-                            isEndpoint = (pt == seg_new.src or pt == seg_new.dst)
-                            intersect = streetlib.Intersect(pt.x, pt.y, True)
-                            seg_new.add_intersect(intersect, key)
+                    pt = geometry.intersect(seg_new, seg_old)
+                    if pt:
+                        isEndpoint = (pt == seg_new.src or pt == seg_new.dst)
+                        intersect = streetlib.Intersect(pt.x, pt.y, True)
+                        seg_new.add_intersect(intersect, key)
 
-                            isEndpoint = (pt == seg_old.src or pt == seg_old.dst)
-                            intersect = streetlib.Intersect(pt.x, pt.y, True)
-                            seg_old.add_intersect(intersect, street.name)
+                        isEndpoint = (pt == seg_old.src or pt == seg_old.dst)
+                        intersect = streetlib.Intersect(pt.x, pt.y, True)
+                        seg_old.add_intersect(intersect, street.name)
 
         # self.graph_streets.append(street)
         self.graph_streets[street.name] = street
@@ -131,7 +131,7 @@ class Graph(object):
         for seg in street.segments:
             for i in range(len(seg.intersects)):
                 item = seg.intersects[i]
-                if item == intersect:
+                if item.x == intersect.x and item.y == intersect.y:
                     other_owner_count = len(item.other_owners)
                     for j in range(other_owner_count):
                         if item.other_owners[j] == remove_street_name:
@@ -182,13 +182,16 @@ class Graph(object):
             #         vertex.append(intersect)
             # if seg.dst not in seg.intersects and not self.vertex_already_exist(seg.dst):
             #     vertex.append(seg.dst)
-            if seg.intersects[0] != seg.src:
+
+            temp = seg.intersects[0]
+            if temp.x != seg.src.x or temp.y != seg.src.y:
                 seg_vertex.append(Vertex(seg.src, False))
 
             for i in range(0, len(seg.intersects)):
                 seg_vertex.append(Vertex(seg.intersects[i], True))
 
-            if seg.intersects[len(seg.intersects) - 1] != seg.dst:
+            temp = seg.intersects[len(seg.intersects) - 1]
+            if temp.x != seg.dst.x or temp.y != seg.dst.y:
                 seg_vertex.append(Vertex(seg.dst, False))
 
         return seg_vertex
@@ -197,7 +200,7 @@ class Graph(object):
     # otherwise, append it to the graph vertex list, and update its id
     def add_to_graph_vertex(self, v):
         for item in self.vertex:
-            if item == v:
+            if item.x == v.x and item.y == v.y:
                 v.id = item.id
                 return
         v.id = len(self.vertex)
@@ -209,7 +212,8 @@ class Graph(object):
         if len(street_vertex) <= 0:
             street_vertex.append(v)
         else:
-            if street_vertex[num - 1] != v:
+            temp = street_vertex[num - 1]
+            if temp.x != v.x or temp.y != v.y:
                 street_vertex.append(v)
 
     # def get_edge_from_segment_vertex(self, seg_vertex):

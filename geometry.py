@@ -120,7 +120,7 @@ def isOnLine(pt, l):
     k = (y2 - y1) / (x2 - x1)
     b = y1 - k*x1
     # line y = kx + b
-    return (k*x + b == y)
+    return ((k*x + b) == y) and ((x-x1)*(x-x2)<0)
 
 # l1 new line, l2 already exist
 # if overlap,

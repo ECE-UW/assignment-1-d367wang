@@ -36,8 +36,8 @@ class Segment(geometry.Line):
     def add_intersect(self, intersect, other_owner_name):
         # if the intersect already exist, do nothing
         for i in self.intersects:
-            # if i.x == intersect.x and i.y == intersect.y:
-            if i == intersect:
+            # if i == intersect:
+            if i.x == intersect.x and i.y == intersect.y:
                 i.add_owner(other_owner_name)
                 return
 
@@ -49,10 +49,14 @@ class Segment(geometry.Line):
 
         # otherwise insert the intersect in the right position of intersect list
         point_list = []
-        if self.src != self.intersects[0]:
+        temp = self.intersects[0]
+        if self.src.x != temp.x or self.src.y != temp.y:
             point_list.append(self.src)
+
         point_list += self.intersects
-        if self.dst != self.intersects[intersect_num - 1]:
+
+        temp = self.intersects[intersect_num - 1]
+        if self.dst.x != temp.x or self.dst.y != temp.y:
             point_list.append(self.dst)
         for i in range(len(point_list) - 1):
             # check each fragment of segment, on which fragment the intersect located
