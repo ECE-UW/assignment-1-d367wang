@@ -22,7 +22,6 @@ class Line(object):
         return repr(self.src) + ' --> ' + repr(self.dst)
 
 
-
 def isVertical(l):
     x1 = l.src.x
     x2 = l.dst.x
@@ -50,8 +49,8 @@ def isIntersect(l1, l2):
                 x2, y2 = l1.dst.x, l1.dst.y
                 x3, y3 = l2.src.x, l2.src.y
                 x4, y4 = l2.dst.x, l2.dst.y
-                k1 = (y2-y1)/(x2-x1)
-                k2 = (y4-y3)/(x4-x3)
+                k1 = (y2 - y1) / (x2 - x1)
+                k2 = (y4 - y3) / (x4 - x3)
                 return k1 != k2
     return False
 
@@ -82,6 +81,24 @@ def intersect(l1, l2):
     #     ycoor = y3
     #     xcoor = (x2 - x1) * (y3 - y1) / (y2 - y1) + x1
     #     return Point(xcoor, ycoor)
+
+    # special situation:
+    if l1.src == l2.src and \
+            not isOnLine(l1.dst, l2) and \
+            not isOnLine(l2.dst, l1):
+        return l1.src
+    if l1.src == l2.dst and \
+            not isOnLine(l1.dst, l2) and \
+            not isOnLine(l2.src, l1):
+        return l1.src
+    if l1.dst == l2.src and \
+            not isOnLine(l1.src, l2) and \
+            not isOnLine(l2.dst, l1):
+        return l1.dst
+    if l1.dst == l2.dst and \
+            not isOnLine(l1.src, l2) and \
+            not isOnLine(l2.src, l1):
+        return l1.dst
 
     # overlap or parallel
     if (x1 - x2) * (y3 - y4) == (y1 - y2) * (x3 - x4):
@@ -118,9 +135,10 @@ def isOnLine(pt, l):
 
     # gradient of line
     k = (y2 - y1) / (x2 - x1)
-    b = y1 - k*x1
+    b = y1 - k * x1
     # line y = kx + b
-    return ((k*x + b) == y) and ((x-x1)*(x-x2)<0)
+    return ((k * x + b) == y) and ((x - x1) * (x - x2) < 0)
+
 
 # l1 new line, l2 already exist
 # if overlap,
