@@ -36,23 +36,23 @@ def isHorizontal(l):
         return True
 
 
-def isIntersect(l1, l2):
-    # l1 l2 neither overlap or parialize
-    if not isOverlap(l1, l2):
-        if isVertical(l1):
-            return not isVertical(l2)
-        else:
-            if isVertical(l2):
-                return True
-            else:
-                x1, y1 = l1.src.x, l1.src.y
-                x2, y2 = l1.dst.x, l1.dst.y
-                x3, y3 = l2.src.x, l2.src.y
-                x4, y4 = l2.dst.x, l2.dst.y
-                k1 = (y2 - y1) / (x2 - x1)
-                k2 = (y4 - y3) / (x4 - x3)
-                return k1 != k2
-    return False
+# def isIntersect(l1, l2):
+#     # l1 l2 neither overlap or parialize
+#     if not isOverlap(l1, l2):
+#         if isVertical(l1):
+#             return not isVertical(l2)
+#         else:
+#             if isVertical(l2):
+#                 return True
+#             else:
+#                 x1, y1 = l1.src.x, l1.src.y
+#                 x2, y2 = l1.dst.x, l1.dst.y
+#                 x3, y3 = l2.src.x, l2.src.y
+#                 x4, y4 = l2.dst.x, l2.dst.y
+#                 k1 = (y2 - y1) / (x2 - x1)
+#                 k2 = (y4 - y3) / (x4 - x3)
+#                 return k1 != k2
+#     return False
 
 
 # check isIntersect before this

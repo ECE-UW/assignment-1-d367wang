@@ -161,6 +161,15 @@ class Graph(object):
             if temp.x != v.x or temp.y != v.y:
                 street_vertex.append(v)
 
+            # !!! just for endpoint !!!
+            # already exist in the vertex list,
+            # but the endpoint is not intersect in last segment,
+            # while the endpoint is an intersect in next segment
+            # important when generating edge
+            else:
+                if v.isIntersect:
+                    temp.isIntersect = True
+
     # a street does not intersect itself, just add each edge between two adjacent vertex
     def get_edge_from_street_vertex(self, street_vertex):
         street_edge = []
