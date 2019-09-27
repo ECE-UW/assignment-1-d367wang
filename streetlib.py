@@ -1,16 +1,5 @@
-import numpy as np
 import string
 import geometry
-
-
-# class Node(geometry.Point):
-#     def __init__(self, x, y, street_name):
-#         super(Node, self).__init__(x, y)
-#         self.street_name = street_name
-#         self.id = hash(street_name + str(x) + str(y))
-#
-#     def __hash__(self):
-#         return self.id
 
 
 class Intersect(geometry.Point):
@@ -27,6 +16,7 @@ class Intersect(geometry.Point):
         for i in range(len(self.other_owners)):
             if self.other_owners[i] == street_name:
                 self.other_owners.pop(i)
+
 
 class Segment(geometry.Line):
     def __init__(self, src, dst):
@@ -48,21 +38,18 @@ class Segment(geometry.Line):
             return
 
         # otherwise insert the intersect in the right position of intersect list
-        point_list = []
-        temp = self.intersects[0]
-        if self.src.x != temp.x or self.src.y != temp.y:
-            point_list.append(self.src)
-
-        point_list += self.intersects
-
-        temp = self.intersects[intersect_num - 1]
-        if self.dst.x != temp.x or self.dst.y != temp.y:
-            point_list.append(self.dst)
-        for i in range(len(point_list) - 1):
-            # check each fragment of segment, on which fragment the intersect located
-            if geometry.isOnLine(intersect, geometry.Line(point_list[i], point_list[i+1])):
-                self.intersects.insert(i, intersect)
-                return
+        if self.src.x < self.dst.x:
+            for i in range(len(self.intersects)):
+                if intersect.x < self.intersects[i].x:
+                    self.intersects.insert(i, intersect)
+                    return
+            self.intersects.append(intersect)
+        else:
+            for i in range(len(self.intersects)):
+                if intersect.x > self.intersects[i].x:
+                    self.intersects.insert(i, intersect)
+                    return
+            self.intersects.append(intersect)
 
 
 class Street(object):
@@ -70,6 +57,7 @@ class Street(object):
         self.name = string.lower(name)
         if points and len(points) >= 2:
             # nodes - tuple, can't be modified after init
+            self.points = points
             self.nodes = self.get_nodes(points)
             self.num = len(points)
             self.segments = []
@@ -77,9 +65,6 @@ class Street(object):
             self.get_segments(self.nodes)
             self.street_vertex = []
             self.street_edge = []
-
-    # def __eq__(self, other):
-    #     return other.name == self.name
 
     # input arg points is a list of 2-tuple, convert tuple to Point object
     def get_nodes(self, points):

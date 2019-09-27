@@ -2,12 +2,6 @@ import streetlib
 import geometry
 
 
-# class GraphNode(object):
-#     def __init__(self, original_node):
-#         self.original_node = original_node
-#         self.isShared = False
-#
-
 class Vertex(geometry.Point):
     def __init__(self, pt, isIntersect, id=-1):
         super(Vertex, self).__init__(pt.x, pt.y)
@@ -17,51 +11,12 @@ class Vertex(geometry.Point):
     def set_id(self, id):
         self.id = id
 
-
     def __repr__(self):
         # return '({0:.2f}, {1:.2f})'.format(self.x, self.y)
         return str(self.id) + ':    ' + super(Vertex, self).__repr__()
 
     def __str__(self):
         return repr(self)
-
-
-#
-# class GraphStreet(object):
-#     def __init__(self, original_street):
-#         # init vertex with all the nodes on the street, update later
-#         self.original_street = original_street
-#         self.path = list(original_street.nodes)
-#         self.vertex = list(original_street.nodes)
-#         self.intersects = []
-#
-#     def add_intersect_to_path(self, seg, intersect_list):
-#         # look for where the first endpoint of segment located in the path
-#         for intersect in intersect_list:
-#             for i in range(len(path) - 1):
-#                 if seg.src == path[i]:
-#                     j = i
-#                     while True:
-#                         if geometry.isOnLine(intersect, geometry.isOnLine(path[j], path[j+1])):
-#                             break
-#                         j += 1
-#                 return
-#
-#     def delet_intersect_from_path(self):
-#         for node in
-#
-#     def get_complex_street(self, original_street):
-#         for node in original_street.nodes:
-#             graph_node = GraphNode(node)
-
-
-# class Edge(street.Segment):
-#     def __eq__(self, other):
-#         if (self.src == other.src and self.src == other.src) or \
-#             (self.src == other.dst and self.dst == other.src):
-#             return True
-#         else:
-#             return False
 
 
 class Graph(object):
@@ -80,9 +35,8 @@ class Graph(object):
         # element of self.edge is 2-tuple
         print 'E = {'
         for e in self.edge:
-            print '<',e[0],',',e[1],'>'
+            print '<', e[0], ',', e[1], '>'
         print '}'
-
 
     def is_street_exist(self, street_name):
         for key in self.graph_streets:
@@ -100,8 +54,8 @@ class Graph(object):
                 for seg_old in self.graph_streets[key].segments:
                     # do not consider times when segments are overlapped
                     # if not geometry.isOverlap(seg_old, seg_new):
-                        # zero or one intersect, if zero intersect, return none
-                        # new_graph_street.intersects.append(intersect)
+                    # zero or one intersect, if zero intersect, return none
+                    # new_graph_street.intersects.append(intersect)
                     pt = geometry.intersect(seg_new, seg_old)
                     if pt:
                         isEndpoint = (pt == seg_new.src or pt == seg_new.dst)
@@ -161,10 +115,6 @@ class Graph(object):
                         # then add it to the street vertex to generate every edge
                         self.add_to_street_vertex(item, street.street_vertex)
 
-                # seg_edge = []
-                # seg_edge = self.get_edge_from_segment_vertex(seg_vertex)
-                # self.get_edge_from_segment_vertex(seg_vertex)
-                # self.edge.append(seg_edge)
             street.street_edge = []
             street.street_edge = self.get_edge_from_street_vertex(street.street_vertex)
             self.add_street_edge_to_graph(street.street_edge)
@@ -174,22 +124,16 @@ class Graph(object):
     def get_vertex_from_segment(self, seg):
         seg_vertex = []
         if len(seg.intersects) > 0:
-            # segment src is a intersect
-            # if seg.src not in seg.intersects and not self.vertex_already_exist(seg.src):
-            #     vertex.append(seg.src)
-            # for intersect in seg.intersects:
-            #     if not self.vertex_already_exist(intersect):
-            #         vertex.append(intersect)
-            # if seg.dst not in seg.intersects and not self.vertex_already_exist(seg.dst):
-            #     vertex.append(seg.dst)
-
+            # endpoint of segment is a vertex
             temp = seg.intersects[0]
             if temp.x != seg.src.x or temp.y != seg.src.y:
                 seg_vertex.append(Vertex(seg.src, False))
 
+            # intersects are vertex
             for i in range(0, len(seg.intersects)):
                 seg_vertex.append(Vertex(seg.intersects[i], True))
 
+            # endpoint of segment is a vertex
             temp = seg.intersects[len(seg.intersects) - 1]
             if temp.x != seg.dst.x or temp.y != seg.dst.y:
                 seg_vertex.append(Vertex(seg.dst, False))
@@ -201,6 +145,7 @@ class Graph(object):
     def add_to_graph_vertex(self, v):
         for item in self.vertex:
             if item.x == v.x and item.y == v.y:
+                # update its own id, since it'll be insert into street vertex with its id afterwards
                 v.id = item.id
                 return
         v.id = len(self.vertex)
@@ -216,26 +161,18 @@ class Graph(object):
             if temp.x != v.x or temp.y != v.y:
                 street_vertex.append(v)
 
-    # def get_edge_from_segment_vertex(self, seg_vertex):
-    #     seg_edge = []
-    #     for i in range(len(seg_vertex) - 1):
-    #         # seg_edge.append((seg_vertex[i].id, seg_vertex[i+1].id))
-    #         self.edge.append((seg_vertex[i].id, seg_vertex[i + 1].id))
-
-         # return seg_edge
-
     # a street does not intersect itself, just add each edge between two adjacent vertex
     def get_edge_from_street_vertex(self, street_vertex):
         street_edge = []
         if len(street_vertex) > 1:
             for i in range(len(street_vertex) - 1):
+                # avoid situation when a edge is shared by two street, e.g. <a,b> and <b,a>
                 if street_vertex[i].isIntersect or street_vertex[i + 1].isIntersect:
-                    street_edge.append((street_vertex[i].id, street_vertex[i + 1].id))
+                    min_id = min(street_vertex[i].id, street_vertex[i + 1].id)
+                    max_id = max(street_vertex[i].id, street_vertex[i + 1].id)
+                    street_edge.append((min_id, max_id))
         return street_edge
 
     def add_street_edge_to_graph(self, street_edge):
         for e in street_edge:
-            # if (e[0],e[1]) in self.edge or (e[1],e[0]) in self.edge:
-                # continue
-                # return
             self.edge.add(e)
