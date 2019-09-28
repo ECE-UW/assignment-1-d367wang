@@ -83,6 +83,8 @@ def intersect(l1, l2):
     #     return Point(xcoor, ycoor)
 
     # special situation:
+    # intersect() is only called when calculating intersect of two segment. all of the coordinate is interger
+    # so the method isOnLine() is useful
     if l1.src == l2.src and \
             not isOnLine(l1.dst, l2) and \
             not isOnLine(l2.dst, l1):
@@ -113,10 +115,12 @@ def intersect(l1, l2):
     ycoor = ynum / yden
 
     pt = Point(xcoor, ycoor)
-    if isOnLine(pt, l1) and isOnLine(pt, l2):
-        return pt
 
-    return None
+    # pt not between two endpoints
+    if (xcoor - x1) * (xcoor - x2) > 0 or (ycoor - y1) * (ycoor - y2) > 0 or \
+                (xcoor - x3) * (xcoor - x4) > 0 or (ycoor - y3) * (ycoor - y4) > 0:
+        return None
+    return pt
 
 
 def isOnLine(pt, l):
@@ -136,24 +140,28 @@ def isOnLine(pt, l):
     # gradient of line
     k = (y2 - y1) / (x2 - x1)
     b = y1 - k * x1
-    # line y = kx + b
+    # 1. line y = kx + b
+    # flag1 = ((k * x + b) == y)
+    # 2. between the endpoint
+    # flag2 = ((x - x1) * (x - x2) < 0)
     return ((k * x + b) == y) and ((x - x1) * (x - x2) < 0)
+    # return flag1 and flag2
 
 
 # l1 new line, l2 already exist
 # if overlap,
-def isOverlap(l1, l2):
-    if isOnLine(l1.src, l2):
-        if isOnLine(l1.dst, l2):
-            return True
-        elif isOnLine(l2.src, l1) and isOnLine(l2.dst, l1):
-            return True
-        return False
-    else:
-        if isOnLine(l1.dst, l2) and \
-                (isOnLine(l2.src, l1) or isOnLine(l2.dst, l1)):
-            return True
-        return False
+# def isOverlap(l1, l2):
+#     if isOnLine(l1.src, l2):
+#         if isOnLine(l1.dst, l2):
+#             return True
+#         elif isOnLine(l2.src, l1) and isOnLine(l2.dst, l1):
+#             return True
+#         return False
+#     else:
+#         if isOnLine(l1.dst, l2) and \
+#                 (isOnLine(l2.src, l1) or isOnLine(l2.dst, l1)):
+#             return True
+#         return False
 
 
 if __name__ == '__main__':
