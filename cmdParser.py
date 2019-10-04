@@ -44,7 +44,7 @@ def operation_parse(input):
         opr = operation.Operation(graph, cmd, street_name, points)
     # invalid command
     else:
-        raise Exception('invalid command')
+        raise Exception('Incorrect input format')
 
     opr.run()
 

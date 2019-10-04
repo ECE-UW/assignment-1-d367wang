@@ -23,21 +23,21 @@ class Operation(object):
 
 def add(street, G):
     if G.is_street_exist(street.name):
-        raise Exception("add failed: street already exists")
+        raise Exception("street currently exists.")
     else:
         G.add_street(street)
 
 
 def change(street, G):
     if not G.is_street_exist(street.name):
-        raise Exception("change failed: street does not exist")
+        raise Exception("'c' or 'r' specified for a street that does not exist.")
     else:
         G.change_street(street)
 
 
 def remove(street_name, G):
     if not G.is_street_exist(street_name):
-        raise Exception("remove failed: street does not exist")
+        raise Exception("'c' or 'r' specified for a street that does not exist.")
     G.remove_street(street_name)
     return
 

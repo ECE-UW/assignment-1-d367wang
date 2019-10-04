@@ -13,7 +13,7 @@ class Vertex(geometry.Point):
 
     def __repr__(self):
         # return '({0:.2f}, {1:.2f})'.format(self.x, self.y)
-        return str(self.id) + ':    ' + super(Vertex, self).__repr__()
+        return str(self.id) + ' : ' + super(Vertex, self).__repr__()
 
     def __str__(self):
         return repr(self)
@@ -34,8 +34,12 @@ class Graph(object):
 
         # element of self.edge is 2-tuple
         print 'E = {'
-        for e in self.edge:
-            print '<', e[0], ',', e[1], '>'
+        if len(self.edge)>0:
+            edge_list = list(self.edge)
+            edge_num = len(edge_list)
+            for i in range(edge_num-1):
+                print ' <', edge_list[i][0], ',', edge_list[i][1], '>,'
+            print ' <', edge_list[edge_num-1][0], ',', edge_list[edge_num-1][1], '>'
         print '}'
 
     def is_street_exist(self, street_name):
@@ -56,8 +60,8 @@ class Graph(object):
                     # if not geometry.isOverlap(seg_old, seg_new):
                     # zero or one intersect, if zero intersect, return none
                     # new_graph_street.intersects.append(intersect)
-                    pt = geometry.intersect(seg_new, seg_old)
-                    if pt:
+                    pts = geometry.intersect(seg_new, seg_old)
+                    for pt in pts:
                         isEndpoint = (pt == seg_new.src or pt == seg_new.dst)
                         intersect = streetlib.Intersect(pt.x, pt.y, True)
                         seg_new.add_intersect(intersect, key)

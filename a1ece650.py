@@ -12,20 +12,20 @@ def main():
     ### by the assignment
     while True:
         # print 'your command: '
-        # line = sys.stdin.readline()
+        input = sys.stdin.readline().strip('\n')
         # if line == '':
         #     break
         # print 'read a line:', line
-        input = raw_input("\nyour command: ")
+        # input = raw_input()
         if input == '':
             break
         try:
             cmdParser.operation_parse(input)
         except Exception as e:
-            sys.stderr.write('Error: '+ e.message + '\n')
+            print 'Error: '+ e.message
         # cmdParser.operation_parse(input)
 
-    print 'Finished reading input'
+    # print 'Finished reading input'
     # return exit code 0 on successful termination
     sys.exit(0)
 

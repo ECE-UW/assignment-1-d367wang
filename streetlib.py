@@ -56,11 +56,13 @@ class Segment(geometry.Line):
                     if intersect.y < self.intersects[i].y:
                         self.intersects.insert(i, intersect)
                         return
-            if self.src.y > self.dst.y:
+                self.intersects.append(intersect)
+            elif self.src.y > self.dst.y:
                 for i in range(len(self.intersects)):
                     if intersect.y > self.intersects[i].y:
                         self.intersects.insert(i, intersect)
                         return
+                self.intersects.append(intersect)
 
 class Street(object):
     def __init__(self, name, points):

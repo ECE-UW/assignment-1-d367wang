@@ -104,7 +104,7 @@ def intersect(l1, l2):
 
     # overlap or parallel
     if (x1 - x2) * (y3 - y4) == (y1 - y2) * (x3 - x4):
-        return None
+        return overlap(l1, l2)
 
     xnum = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4))
     xden = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
@@ -118,9 +118,9 @@ def intersect(l1, l2):
 
     # pt not between two endpoints
     if (xcoor - x1) * (xcoor - x2) > 0 or (ycoor - y1) * (ycoor - y2) > 0 or \
-                (xcoor - x3) * (xcoor - x4) > 0 or (ycoor - y3) * (ycoor - y4) > 0:
-        return None
-    return pt
+            (xcoor - x3) * (xcoor - x4) > 0 or (ycoor - y3) * (ycoor - y4) > 0:
+        return []
+    return [pt]
 
 
 def isOnLine(pt, l):
@@ -149,19 +149,24 @@ def isOnLine(pt, l):
 
 
 # l1 new line, l2 already exist
-# if overlap,
-# def isOverlap(l1, l2):
-#     if isOnLine(l1.src, l2):
-#         if isOnLine(l1.dst, l2):
-#             return True
-#         elif isOnLine(l2.src, l1) and isOnLine(l2.dst, l1):
-#             return True
-#         return False
-#     else:
-#         if isOnLine(l1.dst, l2) and \
-#                 (isOnLine(l2.src, l1) or isOnLine(l2.dst, l1)):
-#             return True
-#         return False
+# if overlap, return a pair of intersects
+def overlap(l1, l2):
+    if isOnLine(l1.src, l2):
+        if isOnLine(l1.dst, l2):
+            return [l1.src, l1.dst]
+        elif isOnLine(l2.src, l1):
+            return [l1.src, l2.src]
+        elif isOnLine(l2.dst, l1):
+            return [l1.src, l2.dst]
+    elif isOnLine(l1.dst, l2):
+        if isOnLine(l2.src, l1):
+            return [l1.dst, l2.src]
+        elif isOnLine(l2.dst, l1):
+            return [l1.dst, l2.dst]
+    elif isOnLine(l2.src, l1) and isOnLine(l2.dst, l1):
+        return [l2.src, l2.dst]
+
+    return []
 
 
 if __name__ == '__main__':
